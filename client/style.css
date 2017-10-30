@@ -1,0 +1,154 @@
+
+html{
+    
+    overflow: hidden;
+}
+
+body{
+
+    margin: 0;
+    background-color: #4594FC;
+}
+
+div.container{
+
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #ababab;
+    margin: 0;
+
+    animation-name: drop;
+    animation-duration: 2s;
+    animation-timing-function:ease-in-out;
+}
+
+img.help{
+
+    width: 100%;
+
+}
+div.mainB{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+div.centerB{
+
+    width: 60px;
+    height: 100%;
+    display: inline-block;
+}
+
+div.help{
+
+    width: 60;
+    height: 60;
+    display: none;
+
+    background-color: transparent;
+    position: absolute;
+    bottom: -70;
+}
+div.player1{
+
+    width: 50%;
+    height: 100%;
+    position: absolute;
+
+    background-color: rgb(255, 82, 82);
+
+    text-align: center;
+}
+
+div.player2{
+
+    width: 50%;
+    height: 100%;
+    left: 50%;
+    position: absolute;
+
+    background-color: rgb(82, 85, 255);
+
+    text-align: center;
+}
+
+div.mobileContainer{
+
+    width: 70%;
+    position: absolute;
+    display: none;
+    background-color: transparent;
+    height: 50%;
+    bottom: 10%;
+    left: 15%;
+}
+p.PlayerTitle{
+
+    font-size: 2em;
+    font-weight: bold;
+
+    text-decoration: none;
+    font: 150px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -5px;
+    color: white;
+    text-shadow: 0 1px 0 #ccc,
+    0 2px 0 #c9c9c9,
+    0 3px 0 #bbb,
+    0 4px 0 #b9b9b9,
+    0 5px 0 #aaa,
+    0 6px 1px rgba(0,0,0,.1),
+    0 0 5px rgba(0,0,0,.1),
+    0 1px 3px rgba(0,0,0,.3),
+    0 3px 5px rgba(0,0,0,.2),
+    0 5px 10px rgba(0,0,0,.25),
+    0 10px 10px rgba(0,0,0,.2),
+    0 20px 20px rgba(0,0,0,.15);
+
+}
+
+p.Subtitle{
+ 
+    font-size: 2em;
+    font-weight: bold;
+
+    text-decoration: none;
+    font: 70px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -5px;
+    color: white;
+    text-shadow: 0 1px 0 #ccc,
+    0 2px 0 #c9c9c9,
+    0 3px 0 #bbb,
+    0 4px 0 #b9b9b9,
+    0 5px 0 #aaa,
+    0 6px 1px rgba(0,0,0,.1),
+    0 0 5px rgba(0,0,0,.1),
+    0 1px 3px rgba(0,0,0,.3),
+    0 3px 5px rgba(0,0,0,.2),
+    0 5px 10px rgba(0,0,0,.25),
+    0 10px 10px rgba(0,0,0,.2),
+    0 20px 20px rgba(0,0,0,.15);
+
+}
+img.mobile{
+
+    height: 100%;
+}
+
+img.tick{
+
+    width: 100%;
+    position: absolute;
+    left: 0;
+
+    display: none;
+
+    max-height: 100%;
+}
+@keyframes drop{
+
+    from {bottom: 100%}
+    to {bottom: 0%}
+}

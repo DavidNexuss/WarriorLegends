@@ -1,0 +1,67 @@
+<html>
+    <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+            <script>
+
+
+                
+                $(document).ready(function(){
+                 
+                    setTimeout(function(){
+
+                        $("#help").fadeIn( { duration: 300, queue: false })
+                        $("#help").animate({bottom: "5%"}, { duration: 300, queue: false })
+                        $(".mobileContainer").fadeIn({ duration: 500, queue: false })
+
+                    },2000);
+
+                    
+                    
+                })
+
+                var socket = io()
+
+                socket.on('Avaible',function(msg){
+
+                    if(msg['player1'] == 1) $('#Tplayer1').fadeIn()
+                    if(msg['player2'] == 1) $('#Tplayer2').fadeIn()
+                })
+                
+            </script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div class="container" id="all">
+                <div class="player1">
+                    <p class="PlayerTitle">Jugador 1</p>
+                    <div class="mobileContainer">
+                        <img class="mobile" src="phone.png"></img>
+                        <img class="tick" src="tick.png" id="Tplayer1"></img>
+                    </div>
+                </div>
+                
+                <div class="player2">
+                    <p class="PlayerTitle">Jugador 2</p>
+                    <div class="mobileContainer">
+                        <img class="mobile" src="phone.png"></img>
+                        <img class="tick" src="tick.png" id ="Tplayer2"></img>
+                    </div>
+                </div>
+
+                <div class="mainB">
+                        <div class="centerB">
+                            <div class="help" id="help">
+                                <img src="help.png" class="help"></img>
+                            </div>
+                            
+                        </div>
+                    </div>
+        </div>
+
+        
+        <script>
+        
+        </script>
+    </body>
+</html>

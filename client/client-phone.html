@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            
+            var gyroPresent = false;
+            window.addEventListener("devicemotion", function(event){
+                if(event.rotationRate.alpha || event.rotationRate.beta || event.rotationRate.gamma)
+                    gyroPresent = true;
+            });
+
+            var socket = io()
+
+            socket.emit('Device','phone')
+
+            socket.on('Avaible',function(msg){
+
+                if(msg['player1'] == 1) $('.player1').css('background','gray')
+                if(msg['player2'] == 1) $('.player2').css('background','gray')
+
+                
+            })
+
+            socket.on('allconnected',function(){
+
+                socket.emit('gyro',gyroPresent)
+            })
+
+            socket.on('options',function(){
+
+                socket.emit('ready',true)
+            })
+            window.onload = function(){
+
+                document.getElementById('Jplayer1').onclick = PlayerAsk1
+                document.getElementById('Jplayer2').onclick = PlayerAsk2
+
+                function PlayerAsk1(player){
+
+                    socket.emit('PlayerAsk','player1')
+                    console.log('Ask for player 1')
+                }
+
+                function PlayerAsk2(player){
+
+                    socket.emit('PlayerAsk','player2')
+                }
+            };
+            
+        </script>
+
+        <div class="container" id="all">
+            
+            <div class="player1">
+                <p class="Subtitle">
+                    <a href="javascript:void" id="Jplayer1">Jugar</a>
+                </p>
+            </div>
+
+            <div class="player2">
+                <p class="Subtitle">
+                    <a href="javascript:void" id="Jplayer2">Jugar</a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
