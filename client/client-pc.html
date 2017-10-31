@@ -41,6 +41,11 @@
 
                     console.log('Game is about to start, options: ')
                     console.log(msg)
+
+                    $('.player1').animate({left: "-50%"}, { duration: 1200, queue: false })
+                    $('.player2').animate({left: "100%"}, { duration: 1200, queue: false })
+
+                    $('#help').fadeOut()
                 })
             </script>
         <link rel="stylesheet" type="text/css" href="style.css">
