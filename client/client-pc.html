@@ -10,47 +10,53 @@
 
                     $('#button').click(function(){
 
-                    console.log('click')
-                    $(".containerGame").addClass("animation")
+                        console.log('click')
+                        $(".containerGame").addClass("animation")
                     
-                    setTimeout(function(){
+                        setTimeout(function(){
 
-                        $("#help").fadeIn( { duration: 300, queue: false })
-                        $("#help").animate({bottom: "5%"}, { duration: 300, queue: false })
-                        $(".mobileContainer").fadeIn({ duration: 500, queue: false })
+                            $("#help").fadeIn( { duration: 300, queue: false })
+                            $("#help").animate({bottom: "5%"}, { duration: 300, queue: false })
+                            $(".mobileContainer").fadeIn({ duration: 500, queue: false })
 
-                    },2000)
+                        },2000)
+
+                        IO()
                     
                     })
                 })
 
-                var socket = io()
+                function IO(){
 
-                socket.emit('type',0)
-                socket.emit('createGame','default')
+                    var socket = io()
 
-                socket.on('state',function(msg){
+                    socket.emit('type',0)
+                    socket.emit('createGame',$('.serveridinput').val())
 
-                    console.log('New state')
-                    if(msg['player0']) $('#Tplayer0').fadeIn()
-                    if(msg['player1']) $('#Tplayer1').fadeIn()
+                    socket.on('state',function(msg){
 
-                    if(!msg['player0']) $('#Tplayer0').fadeOut()
-                    if(!msg['player1']) $('#Tplayer1').fadeOut()
+                        console.log('New state')
+                        if(msg['player0']) $('#Tplayer0').fadeIn()
+                        if(msg['player1']) $('#Tplayer1').fadeIn()
+
+                        if(!msg['player0']) $('#Tplayer0').fadeOut()
+                        if(!msg['player1']) $('#Tplayer1').fadeOut()
 
 
-                })
+                    })
 
-                socket.on('starting',function(msg){
+                    socket.on('starting',function(msg){
 
-                    console.log('Game is about to start, options: ')
-                    console.log(msg)
+                        console.log('Game is about to start, options: ')
+                        console.log(msg)
 
-                    $('.player1').animate({left: "-50%"}, { duration: 1200, queue: false })
-                    $('.player2').animate({left: "100%"}, { duration: 1200, queue: false })
+                        $('.player1').animate({left: "-50%"}, { duration: 1200, queue: false })
+                        $('.player2').animate({left: "100%"}, { duration: 1200, queue: false })
 
-                    $('#help').fadeOut()
-                })
+                        $('#help').fadeOut()
+                    })
+                }
+                
             </script>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
