@@ -15,25 +15,24 @@
 
             var socket = io()
 
-            socket.emit('Device','phone')
+            socket.emit('type',1)
+            socket.emit('getstate','default')
+            socket.on('state',function(msg){
 
-            socket.on('Avaible',function(msg){
+                console.log('New State')
 
-                if(msg['player1'] == 1) $('.player1').css('background','gray')
-                if(msg['player2'] == 1) $('.player2').css('background','gray')
+                if(msg['player0']) $('.player1').css('background','gray')
+                if(msg['player1']) $('.player2').css('background','gray')
 
                 
             })
 
-            socket.on('allconnected',function(){
+            socket.on('starting',function(msg){
 
-                socket.emit('gyro',gyroPresent)
+                console.log('Game is about to start, options: ')
+                console.log(msg)
             })
 
-            socket.on('options',function(){
-
-                socket.emit('ready',true)
-            })
             window.onload = function(){
 
                 document.getElementById('Jplayer1').onclick = PlayerAsk1
@@ -41,13 +40,24 @@
 
                 function PlayerAsk1(player){
 
-                    socket.emit('PlayerAsk','player1')
-                    console.log('Ask for player 1')
+                    var msg = {
+
+                        'id' : 'default',
+                        'player' : 0
+                    }
+                    socket.emit('connectGame',msg)
+                    console.log('Ask for player 0' + msg)
                 }
 
                 function PlayerAsk2(player){
 
-                    socket.emit('PlayerAsk','player2')
+                    var msg = {
+
+                        'id' : 'default',
+                        'player' : 1
+                    }
+                    socket.emit('connectGame',msg)
+                    console.log('Ask for player 1' + msg)
                 }
             };
             

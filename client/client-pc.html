@@ -22,12 +22,26 @@
 
                 var socket = io()
 
-                socket.on('Avaible',function(msg){
+                socket.emit('type',0)
+                socket.emit('createGame','default')
 
-                    if(msg['player1'] == 1) $('#Tplayer1').fadeIn()
-                    if(msg['player2'] == 1) $('#Tplayer2').fadeIn()
+                socket.on('state',function(msg){
+
+                    console.log('New state')
+                    if(msg['player0']) $('#Tplayer0').fadeIn()
+                    if(msg['player1']) $('#Tplayer1').fadeIn()
+
+                    if(!msg['player0']) $('#Tplayer0').fadeOut()
+                    if(!msg['player1']) $('#Tplayer1').fadeOut()
+
+
                 })
-                
+
+                socket.on('starting',function(msg){
+
+                    console.log('Game is about to start, options: ')
+                    console.log(msg)
+                })
             </script>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
@@ -37,7 +51,7 @@
                     <p class="PlayerTitle">Jugador 1</p>
                     <div class="mobileContainer">
                         <img class="mobile" src="phone.png"></img>
-                        <img class="tick" src="tick.png" id="Tplayer1"></img>
+                        <img class="tick" src="tick.png" id="Tplayer0"></img>
                     </div>
                 </div>
                 
@@ -45,7 +59,7 @@
                     <p class="PlayerTitle">Jugador 2</p>
                     <div class="mobileContainer">
                         <img class="mobile" src="phone.png"></img>
-                        <img class="tick" src="tick.png" id ="Tplayer2"></img>
+                        <img class="tick" src="tick.png" id ="Tplayer1"></img>
                     </div>
                 </div>
 

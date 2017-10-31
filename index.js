@@ -24,7 +24,7 @@ class Player{
 
     hookControl(){
 
-        socket.on('angle',function(msg){
+        this.socket.on('angle',function(msg){
 
             this.x = msg['x']
             this.y = msg['y']
@@ -39,23 +39,59 @@ var players = []                    //-- Player
 class Game{
     
     
-    constructor(id){
+    constructor(id,PC){             //Game ID and PC socket         --String, Socket
 
-        this.id = id                //GAME ID           -- String
-        
-        this.Player0 = null         //PLAYER 0          -- Player
-        this.Player1 = null         //PLAYER 1          -- Player
+        this.id = id                //GAME ID                       -- String
+        this.PC = PC                //PC Socket                     -- Socket
+
+        this.Player0 = null         //PLAYER 0                      -- Player
+        this.Player1 = null         //PLAYER 1                      -- Player
         
         this.hasPlayer0 = false
         this.hasPlayer1 = false
 
-        this.Owner = null           //OWNER             -- Socket
+        this.Owner = null           //OWNER                         -- Socket
 
         this.isFull = false
 
         this.isStarted = false
     }
 
+    startGame(){
+
+        var usingGyro = true
+
+        if(!this.Player0.gyro || !this.Player1.gyro) this.usingGyro = false
+
+        var Options = {
+
+            'gyro' : this.usingGyro
+        }
+        this.Player0.socket.emit('starting',Options)
+        this.Player1.socket.emit('starting',Options)
+
+        this.Player0.hookControl()
+        this.Player1.hookControl()
+
+        this.PC.emit('starting',Options)
+
+        console.log('#Game has started')
+    }
+    testFull(){
+
+        if(this.hasPlayer0) updateGameState(this.id,this.Player0.socket)
+        if(this.hasPlayer1) updateGameState(this.id,this.Player1.socket)
+        updateGameState(this.id,this.PC)
+
+        if(this.hasPlayer0 && this.hasPlayer1){
+
+            this.isFull = true
+            console.log('#Game ' + this.id + ' is now full, game is about to start')
+            this.startGame()
+        }
+
+
+    }
     disconnect(player){             //PLAYER            --Player
 
         if(player == Player0){
@@ -75,75 +111,49 @@ class Game{
     }            
     setPlayer0(player){             //PLAYER            --Player
 
+        console.log('Trying to put a new player0 in game: ' + this.id)
         if(!this.hasPlayer0){
 
-            this.player0 = player
+            this.Player0 = player
             this.hasPlayer0 = true
 
             this.game = this
 
             players.push(player)
 
-            testFull()
+            this.testFull()
+        }else{
+
+            console.log('Attempt to be an already chosed player')
         }
 
         
     }
     setPlayer1(player){             //PLAYER            --Player             
 
+        console.log('Trying to put a new player1 in game: ' + this.id)
         if(!this.hasPlayer1){
 
-            this.player1 = player
+            this.Player1 = player
             this.hasPlayer1 = true
 
             this.game = this
 
             players.push(player)
 
-            testFull()
+            this.testFull()
+        }else{
+
+            console.log('Attempt to be an already chosed player')
+            
         }
 
         
     }
 
-    testFull(){
-
-        if(hasPlayer0) updateGameState(player0.socket)
-        if(hasPlayer1) updateGameState(player1.socket)
-
-        updateGameState(PC)
-
-        if(hasPlayer0 && hasPlayer1){
-
-            isFull = true
-            startGame()
-        }
-
-
-    }
+   
     
-    startGame(){
-
-        var usingGyro = true
-
-        if(!Player0.gyro || !Player1.gyro) usingGyro = false
-
-        var Options = {
-
-            'gyro' : usingGyro
-        }
-        Player0.socket.emit('starting',Options)
-        Player1.socket.emit('starting',Options)
-
-        Player0.hookControl()
-        Player1.hookControl()
-
-        PC.emit('starting',Options)
-
-
-
-
-    }
+    
 }
 
 var PC = 0
@@ -189,7 +199,7 @@ function updateGameState(id,socket){            //-- String, Socket
 }
 io.on('connection',function(socket){
 
-    socket.on('state',function(msg){                //Sends Game state by a given id
+    socket.on('getstate',function(msg){                //Sends Game state by a given id
 
         updateGameState(msg,socket)
         
@@ -200,23 +210,38 @@ io.on('connection',function(socket){
 
             socket.on('createGame',function(msg){
 
-                Games[msg] = new Game(msg)
+                Games[msg] = new Game(msg,socket)
+                console.log('New Game has been created! : ' + msg)
             })
         }else{
 
-            
             socket.on('connectGame',function(msg){
 
+                var hack = false
+
+                for(let el of players){
+
+                    if(el.socket === socket) hack = true
+                }
+
+                if(hack){
+
+                    console.log('Someone has attempt to be both players from one device!')
+                    return;
+                }
                 var game = Games[msg['id']] //The desired game
                 
                 if(game != null){
 
                     var player = new Player(socket) //The Player object
-
-                    if(msg['player'] = 0) game.setPlayer0(new Player(socket))
-                    if(msg['player'] = 1) game.setPlayer1(new Player(socket))
-
                     player.gyro = msg['gyro']
+
+                    console.log(msg['player'])
+                    
+                    if(msg['player'] === 0) game.setPlayer0(player)
+                    if(msg['player'] === 1) game.setPlayer1(player)
+
+                    
 
 
                 }else{
