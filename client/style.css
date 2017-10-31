@@ -10,19 +10,95 @@ body{
     background-color: #4594FC;
 }
 
-div.container{
+div.containerTitle{
+ 
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #333333;
+    margin: 0;
+    display: flex;
+}
+div.serverbox{
+
+    width: 50%;
+    height: 5%;
+    margin: auto;
+    background-color: gray;
+    line-height: 100%;
+    text-align: center;
+    display: flex;
+    border-radius: 10px;
+    box-shadow: 0px 0px 42px 8px rgba(0,255,255,0.34);
+    padding: 20px;
+    opacity: 0;
+}
+
+input.serveridinput{
+
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    border-radius: 7px;
+    border: none;
+    font-size: 24pt;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+input.serversubmit{
+
+    width: 100;
+    border-radius: 10px;
+    font-size: 15;
+    border: none;
+    margin-left: 10px;
+    background-color: rgba(188, 216, 211, 0.57);
+}
+div.containerGame{
 
     width: 100%;
     height: 100%;
     position: absolute;
     background-color: #ababab;
     margin: 0;
+    bottom: 100%;
+}
+
+div.containerGame.animation{
 
     animation-name: drop;
     animation-duration: 2s;
     animation-timing-function:ease-in-out;
+    bottom: 0
+}
+/*TODO: HELP BOX!*/
+div.helpContainer{
+
+    position: absolute;
+    left: 50%;
+}
+div.helpMessage{
+
+    width: 30%;
+    height: 30%;
+    
+    left: -50%;
+    position: relative;
+    background-color: rgb(216, 216, 216);
+    margin: 0;
+
+    display: none;
 }
 
+div.helpMessageHeader{
+
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    top: 0;
+    background-color: yellowgreen;
+}
 img.help{
 
     width: 100%;
@@ -147,6 +223,7 @@ img.tick{
 
     max-height: 100%;
 }
+
 @keyframes drop{
 
     from {bottom: 100%}

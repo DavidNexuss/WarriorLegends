@@ -4,20 +4,24 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
             <script>
 
-
-                
                 $(document).ready(function(){
-                 
+
+                    $('.serverbox').animate({opacity : "1"},{duration:2000})
+
+                    $('#button').click(function(){
+
+                    console.log('click')
+                    $(".containerGame").addClass("animation")
+                    
                     setTimeout(function(){
 
                         $("#help").fadeIn( { duration: 300, queue: false })
                         $("#help").animate({bottom: "5%"}, { duration: 300, queue: false })
                         $(".mobileContainer").fadeIn({ duration: 500, queue: false })
 
-                    },2000);
-
+                    },2000)
                     
-                    
+                    })
                 })
 
                 var socket = io()
@@ -51,7 +55,13 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-        <div class="container" id="all">
+        <div class="containerTitle">
+            <div class="serverbox">
+                <input type="text" value="Nombre de la partida" name="game" class = "serveridinput">
+                <input type="submit" value="Crear partida" id="button" name="submit" class="serversubmit">
+            </div>
+            <div class="containerGame" id="all">
+                
                 <div class="player1">
                     <p class="PlayerTitle">Jugador 1</p>
                     <div class="mobileContainer">
@@ -69,15 +79,14 @@
                 </div>
 
                 <div class="mainB">
-                        <div class="centerB">
-                            <div class="help" id="help">
-                                <img src="help.png" class="help"></img>
-                            </div>
-                            
+                    <div class="centerB">
+                        <div class="help" id="help">
+                            <img src="help.png" class="help"></img>
                         </div>
                     </div>
+                </div>
+            </div>
         </div>
-
         
         <script>
         
