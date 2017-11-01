@@ -208,7 +208,6 @@ function updataGameList(socket){
         })
     }
 
-    
     socket.emit('gamelist',gamelist)
 }
 io.on('connection',function(socket){

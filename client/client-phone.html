@@ -15,7 +15,7 @@
             var ID = ''
             var gyroPresent = false;
             var socket = io()
-            
+
             function chooseTeam(){
 
                 console.log('ChooseTeam')
@@ -80,7 +80,7 @@
             */
             socket.on('gamelist',function(gamelist){
 
-                if(gamelist.lenght != 0){
+                if(gamelist.length != 0){
 
                     var id = 0
                     for(let game of gamelist){
