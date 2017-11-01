@@ -2,23 +2,113 @@
     <head>
         <title>Warrior Legends Mobile</title>
         <link rel="icon" type="image/png" href="favicon.png" />
+
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="table.css">
+
     </head>
     <body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
-            
+
+            var ID = ''
             var gyroPresent = false;
+            var socket = io()
+            
+            function chooseTeam(){
+
+                console.log('ChooseTeam')
+                document.getElementById('Jplayer1').onclick = PlayerAsk1
+                document.getElementById('Jplayer2').onclick = PlayerAsk2
+
+                function PlayerAsk1(player){
+
+                    var msg = {
+
+                        'id' : ID,
+                        'player' : 0
+                    }
+                    socket.emit('connectGame',msg)
+                    console.log('Ask for player 0' + msg)
+                }
+
+                function PlayerAsk2(player){
+
+                    var msg = {
+
+                        'id' : ID,
+                        'player' : 1
+                    }
+                    socket.emit('connectGame',msg)
+                    console.log('Ask for player 1' + msg)
+                }
+            };
+            function hookRow(row){
+
+                row.click(function(){
+
+                    console.log(row.attr('id'))
+                    ID = document.getElementById(row.attr('id')).innerHTML
+                    
+                    $('table').fadeOut()
+
+                    $('.player1').fadeIn()
+                    $('.player2').fadeIn()
+
+                    chooseTeam()
+            
+                })
+            }
+            $(document).ready(function(){
+
+            
+            
+                
             window.addEventListener("devicemotion", function(event){
                 if(event.rotationRate.alpha || event.rotationRate.beta || event.rotationRate.gamma)
                     gyroPresent = true;
             });
 
-            var socket = io()
+            
 
             socket.emit('type',1)
-            socket.emit('getstate','default')
+            socket.emit('getgamelist',0)
+
+            /**
+            * @param {string} [gamelist] - Somebody's name.
+            */
+            socket.on('gamelist',function(gamelist){
+
+                if(gamelist.lenght != 0){
+
+                    var id = 0
+                    for(let game of gamelist){
+
+                        if(!game['player0'] || !game['player1']){
+
+                            $('table tbody').append(
+
+                                '<tr><td id=row' + id + '>' + game['id'] + '</td></tr>'
+                            )
+
+                            var row = $('#row' + id)
+                            hookRow(row)
+                            id++
+                        }
+
+                        
+                    }
+                }else{
+
+                    $('table tbody').append(
+
+                        '<tr><td>No hay ninguna partida abierta!</td></tr>'
+                    )
+                }
+
+                $('#table').fadeIn()
+            })
             socket.on('state',function(msg){
 
                 console.log('New State')
@@ -35,49 +125,37 @@
                 console.log(msg)
             })
 
-            window.onload = function(){
+            
 
-                document.getElementById('Jplayer1').onclick = PlayerAsk1
-                document.getElementById('Jplayer2').onclick = PlayerAsk2
-
-                function PlayerAsk1(player){
-
-                    var msg = {
-
-                        'id' : 'default',
-                        'player' : 0
-                    }
-                    socket.emit('connectGame',msg)
-                    console.log('Ask for player 0' + msg)
-                }
-
-                function PlayerAsk2(player){
-
-                    var msg = {
-
-                        'id' : 'default',
-                        'player' : 1
-                    }
-                    socket.emit('connectGame',msg)
-                    console.log('Ask for player 1' + msg)
-                }
-            };
+            })
+            
             
         </script>
 
         <div class="container" id="all">
+            <div class="containerTitle">
+                <table class="table-fill" style="display: none" id="table">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Partidas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="player1" style="display: none">
+                    <p class="Subtitle">
+                        <a href="javascript:void" id="Jplayer1">Jugar</a>
+                    </p>
+                </div>
+    
+                <div class="player2" style="display: none">
+                    <p class="Subtitle">
+                        <a href="javascript:void" id="Jplayer2">Jugar</a>
+                    </p>
+                </div>
+            </div>
             
-            <div class="player1">
-                <p class="Subtitle">
-                    <a href="javascript:void" id="Jplayer1">Jugar</a>
-                </p>
-            </div>
-
-            <div class="player2">
-                <p class="Subtitle">
-                    <a href="javascript:void" id="Jplayer2">Jugar</a>
-                </p>
-            </div>
         </div>
     </body>
 </html>
