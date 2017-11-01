@@ -1,7 +1,5 @@
 var express = require('express');
 var app = express();
-
-var device = require('express-device');
 var http = require('http').Server(app);
 
 var io = require('socket.io')(http);
@@ -160,8 +158,6 @@ var PC = 0
 var Phone = 1
 
 var Games = {}
-
-app.use(device.capture());
 
 io.on('disconnect',function(socket){
 
