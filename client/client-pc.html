@@ -54,6 +54,16 @@
                         $('.player2').animate({left: "100%"}, { duration: 1200, queue: false })
 
                         $('#help').fadeOut()
+
+                        socket.on('gamelist',function(gamelist){ 
+                            
+                            for(let game of gamelist){
+
+                                console.log(game)
+                            }
+                             
+                        })
+                        socket.emit('getgamelist','')
                     })
                 }
                 

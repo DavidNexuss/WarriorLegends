@@ -16,9 +16,7 @@ class Player{
 
         this.game = null
 
-        this.x
-        this.y
-        this.z
+        this.angle = []
 
     }
 
@@ -26,9 +24,9 @@ class Player{
 
         this.socket.on('angle',function(msg){
 
-            this.x = msg['x']
-            this.y = msg['y']
-            this.z = msg['z']
+            this.angle[0] = msg[0]
+            this.angle[1] = msg[1]
+            this.angle[2] = msg[2]
         })
 
     }
@@ -76,6 +74,8 @@ class Game{
         this.PC.emit('starting',Options)
 
         console.log('#Game has started')
+
+        this.isStarted = true
     }
     testFull(){
 
@@ -197,12 +197,35 @@ function updateGameState(id,socket){            //-- String, Socket
         socket.emit('state',state)
     }
 }
+
+function updataGameList(socket){
+
+    var gamelist = []
+    for(let game of Object.keys(Games).map(key => Games[key])){
+
+        gamelist.push({
+
+            'id': game.id,
+            'player0' : game.hasPlayer0,
+            'player1': game.hasPlayer1,
+            'isStarted' : game.isStarted    
+        })
+    }
+
+    
+    socket.emit('gamelist',gamelist)
+}
 io.on('connection',function(socket){
 
     socket.on('getstate',function(msg){                //Sends Game state by a given id
 
         updateGameState(msg,socket)
         
+    })
+
+    socket.on('getgamelist',function(msg){
+
+        updataGameList(socket)
     })
     socket.on('type',function(msg){
 
@@ -215,6 +238,7 @@ io.on('connection',function(socket){
             })
         }else{
 
+            
             socket.on('connectGame',function(msg){
 
                 var hack = false
@@ -253,13 +277,13 @@ io.on('connection',function(socket){
     })
 })
 app.get('/', function(req, res){
-  
-    if(req.device.type = "desktop")
 
         res.sendFile(__dirname + "/client/client-pc.html")
-    else
-        res.sendFile(__dirname + "/client/client-phone.html")   
-  
+});
+
+app.get('/phone', function(req, res){
+    
+        res.sendFile(__dirname + "/client/client-phone.html")
 });
 
 app.use(express.static('client'))

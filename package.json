@@ -2,6 +2,9 @@
   "name": "warriorlegend",
   "version": "1.0.0",
   "description": "A socket.io game",
+  "engines": {
+    "node": "6.11.1"
+  },
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
@@ -9,7 +12,16 @@
   "author": "DavidNexus",
   "license": "MIT",
   "dependencies": {
+	"ejs": "2.5.6",
     "express": "^4.15.2",
     "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "request": "^2.81.0",
+    "tape": "^4.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidNexuss/WarriorLegends"
   }
 }
