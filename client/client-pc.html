@@ -12,20 +12,12 @@
 
                     $('#button').click(function(){
 
-                        $('.serverbox').fadeOut()
-                        console.log('click')
-                        $(".containerGame").addClass("animation")
-                    
-                        setTimeout(function(){
-
-                            $("#help").fadeIn( { duration: 300, queue: false })
-                            $("#help").animate({bottom: "5%"}, { duration: 300, queue: false })
-                            $(".mobileContainer").fadeIn({ duration: 500, queue: false })
-
-                        },2000)
-
                         IO()
-                    
+                        
+
+                            
+                        
+
                     })
                 })
 
@@ -36,38 +28,57 @@
                     socket.emit('type',0)
                     socket.emit('createGame',$('.serveridinput').val())
 
-                    socket.on('state',function(msg){
+                    socket.on('successCreate',function(msg){
 
-                        console.log('New state')
-                        if(msg['player0']) $('#Tplayer0').fadeIn()
-                        if(msg['player1']) $('#Tplayer1').fadeIn()
+                        if(msg['status'] === 1){
 
-                        if(!msg['player0']) $('#Tplayer0').fadeOut()
-                        if(!msg['player1']) $('#Tplayer1').fadeOut()
+                            socket.on('state',function(msg){
+
+                                console.log('New state')
+                                if(msg['player0']) $('#Tplayer0').fadeIn()
+                                if(msg['player1']) $('#Tplayer1').fadeIn()
+
+                                if(!msg['player0']) $('#Tplayer0').fadeOut()
+                                if(!msg['player1']) $('#Tplayer1').fadeOut()
 
 
+                            })
+
+                            socket.on('starting',function(msg){
+
+                                console.log('Game is about to start, options: ')
+                                console.log(msg)
+
+                                $('.player1').animate({left: "-50%"}, { duration: 1200, queue: false })
+                                $('.player2').animate({left: "100%"}, { duration: 1200, queue: false })
+
+                                $('#help').fadeOut()
+
+                            })
+
+                            $('.serverbox').fadeOut()
+                            console.log('click')
+                            $(".containerGame").addClass("animation")
+                    
+                            setTimeout(function(){
+
+                                $("#help").fadeIn( { duration: 300, queue: false })
+                                $("#help").animate({bottom: "5%"}, { duration: 300, queue: false })
+                                $(".mobileContainer").fadeIn({ duration: 500, queue: false })
+
+                            },2000)
+
+                            console.log('Success on creating game')
+                        }else{
+
+                            console.log('Error on creating game')
+                            document.getElementById("Sinput").value = "";
+                            alert(msg['error'])
+
+                        }
+                        
                     })
-
-                    socket.on('starting',function(msg){
-
-                        console.log('Game is about to start, options: ')
-                        console.log(msg)
-
-                        $('.player1').animate({left: "-50%"}, { duration: 1200, queue: false })
-                        $('.player2').animate({left: "100%"}, { duration: 1200, queue: false })
-
-                        $('#help').fadeOut()
-
-                        socket.on('gamelist',function(gamelist){ 
-                            
-                            for(let game of gamelist){
-
-                                console.log(game)
-                            }
-                             
-                        })
-                        socket.emit('getgamelist','')
-                    })
+                    
                 }
                 
             </script>
@@ -76,7 +87,7 @@
     <body>
         <div class="containerTitle">
             <div class="serverbox">
-                <input type="text" value="Nombre de la partida" name="game" class = "serveridinput">
+                <input type="text" value="Nombre de la partida" name="game" id="Sinput"class = "serveridinput">
                 <input type="submit" value="Crear partida" id="button" name="submit" class="serversubmit">
             </div>
             <div class="containerGame" id="all">

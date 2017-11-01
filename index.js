@@ -35,7 +35,7 @@ var players = []                    //-- Player
 class Game{
     
     
-    constructor(id,PC){             //Game ID and PC socket         --String, Socket
+    constructor(id,PC){             //Game ID and PC socket         -- String, Socket
 
         this.id = id                //GAME ID                       -- String
         this.PC = PC                //PC Socket                     -- Socket
@@ -43,6 +43,7 @@ class Game{
         this.Player0 = null         //PLAYER 0                      -- Player
         this.Player1 = null         //PLAYER 1                      -- Player
         
+        this.NotSelected = []       //Not selected players, socket  -- Socket
         this.hasPlayer0 = false
         this.hasPlayer1 = false
 
@@ -57,6 +58,7 @@ class Game{
 
         var usingGyro = true
 
+        
         if(!this.Player0.gyro || !this.Player1.gyro) this.usingGyro = false
 
         var Options = {
@@ -81,6 +83,11 @@ class Game{
         if(this.hasPlayer1) updateGameState(this.id,this.Player1.socket)
         updateGameState(this.id,this.PC)
 
+        this.NotSelected.forEach(function(element) {
+            
+            updateGameState(this.id,element)
+        }, this);
+
         if(this.hasPlayer0 && this.hasPlayer1){
 
             this.isFull = true
@@ -96,6 +103,7 @@ class Game{
 
             this.Player0 = null
             this.isFull = false
+            
 
 
         }
@@ -159,6 +167,7 @@ var Phone = 1
 
 var Games = {}
 
+var Default = {'status' : 1,'error' : 0}
 io.on('disconnect',function(socket){
 
     var Player = null
@@ -228,12 +237,24 @@ io.on('connection',function(socket){
 
             socket.on('createGame',function(msg){
 
-                Games[msg] = new Game(msg,socket)
-                console.log('New Game has been created! : ' + msg)
+                if(Games[msg] != null){ socket.emit('successCreate',{'status' : 0,'error' : 'Esta partida ya existe!'}); return}
+                if(msg === ''){ socket.emit('successCreate',{'status' : 0,'error' : 'No tiene nombre'}); return}
+                    
+                    Games[msg] = new Game(msg,socket)
+                    console.log('New Game has been created! : ' + msg)
+                    socket.emit('successCreate',Default)
+                
+                
             })
         }else{
 
-            
+            socket.on('hookForGame',function(id){
+
+                if(Games[id] != null){
+
+                    Games[id].NotSelected.push(socket)
+                }
+            })
             socket.on('connectGame',function(msg){
 
                 var hack = false
@@ -252,6 +273,10 @@ io.on('connection',function(socket){
                 
                 if(game != null){
 
+                    game.NotSelected.filter(function(e){
+
+                        return e !== socket
+                    })
                     var player = new Player(socket) //The Player object
                     player.gyro = msg['gyro']
 
